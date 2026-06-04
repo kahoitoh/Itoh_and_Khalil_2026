@@ -1,0 +1,5 @@
+library_id,atac_fragments,per_barcode_metrics,gex_molecule_info
+BLA_OptiPrep_HC_rep1,/path/to/BLA_OptiPrep_HC_rep1/outs/atac_fragments.tsv.gz,/path/to/BLA_OptiPrep_HC_rep1/outs/per_barcode_metrics.csv,/path/to/BLA_OptiPrep_HC_rep1/outs/molecule_info.h5
+BLA_OptiPrep_Cond_4h_rep1,/path/to/BLA_OptiPrep_Cond_4h_rep1/outs/atac_fragments.tsv.gz,/path/to/BLA_OptiPrep_Cond_4h_rep1/outs/per_barcode_metrics.csv,/path/to/BLA_OptiPrep_Cond_4h_rep1/outs/molecule_info.h5
+BLA_OptiPrep_HC_rep2,/path/to/BLA_OptiPrep_HC_rep2/outs/atac_fragments.tsv.gz,/path/to/BLA_OptiPrep_HC_rep2/outs/per_barcode_metrics.csv,/path/to/BLA_OptiPrep_HC_rep2/outs/molecule_info.h5
+BLA_OptiPrep_Cond_4h_rep2,/path/to/BLA_OptiPrep_Cond_4h_rep2/outs/atac_fragments.tsv.gz,/path/to/BLA_OptiPrep_Cond_4h_rep2/outs/per_barcode_metrics.csv,/path/to/BLA_OptiPrep_Cond_4h_rep2/outs/molecule_info.h5

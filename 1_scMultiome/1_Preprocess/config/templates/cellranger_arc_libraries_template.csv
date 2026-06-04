@@ -1,0 +1,3 @@
+﻿fastqs,sample,library_type
+path_to_processed_fastq,GEX_1_mPFC_HC_OptiPrep_rep2_N584-0437,Gene Expression
+path_to_processed_fastq,mPFC_HC_OptiPrep_ATAC_2,Chromatin Accessibility

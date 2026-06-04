@@ -1,0 +1,10 @@
+region	celltype	avg_log2FC_min
+BLA	VGlut	0.7
+BLA	GABA	1
+BLA	Glia	1
+Hippo	VGlut	1
+Hippo	GABA	1
+Hippo	Glia	1
+Cortex	VGlut	1
+Cortex	GABA	1
+Cortex	Glia	1

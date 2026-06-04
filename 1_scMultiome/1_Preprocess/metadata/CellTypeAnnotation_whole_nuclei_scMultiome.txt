@@ -1,0 +1,214 @@
+region	ClusterNumber	CellType	clustering	group
+BLA	0	Exc_Neu_1	first	
+BLA	3	Exc_Neu_2	first	
+BLA	7	Exc_Neu_3	first	
+BLA	11	Exc_Neu_4	first	
+BLA	12	Exc_Neu_5	first	
+BLA	14	Exc_Neu_6	first	
+BLA	16	Exc_Neu_7	first	
+BLA	1	Inh_Neu_1	first	
+BLA	2	Inh_Neu_2	first	
+BLA	4	Inh_Neu_3	first	
+BLA	5	Inh_Neu_4	first	
+BLA	10	Inh_Neu_5	first	
+BLA	13	Inh_Neu_6	first	
+BLA	15	Inh_Neu_7	first	
+BLA	6	Glia_1	first	
+BLA	8	Glia_2	first	
+BLA	9	Glia_3	first	
+BLA	17	Glia_4	first	
+BLA	18	Glia_5	first	
+BLA	19	Glia_6	first	
+Hippo	0	Exc_Neu_1	first	
+Hippo	2	Exc_Neu_2	first	
+Hippo	3	Exc_Neu_3	first	
+Hippo	7	Exc_Neu_4	first	
+Hippo	10	Exc_Neu_5	first	
+Hippo	5	Inh_Neu_1	first	
+Hippo	11	Inh_Neu_2	first	
+Hippo	12	Inh_Neu_3	first	
+Hippo	1	Glia_1	first	
+Hippo	4	Glia_2	first	
+Hippo	6	Glia_3	first	
+Hippo	8	Glia_4	first	
+Hippo	9	Glia_5	first	
+Hippo	13	undetermined_2	first	
+mPFC	0	Exc_Neu_1	first	
+mPFC	1	Exc_Neu_2	first	
+mPFC	5	Exc_Neu_3	first	
+mPFC	7	Exc_Neu_4	first	
+mPFC	8	Exc_Neu_5	first	
+mPFC	11	Exc_Neu_6	first	
+mPFC	2	Inh_Neu_1	first	
+mPFC	6	Inh_Neu_2	first	
+mPFC	3	Glia_1	first	
+mPFC	4	Glia_2	first	
+mPFC	9	Glia_3	first	
+mPFC	10	Glia_4	first		
+BLA	0	LA_Neu_Rorb	second	Exc_Neu
+BLA	3	LA_Neu_Chst9	second	Exc_Neu
+BLA	1	BA_Neu	second	Exc_Neu
+BLA	5	BMA_Neu	second	Exc_Neu
+BLA	6	Exc_neu_Pcdh15	second	Exc_Neu
+BLA	7	Exc_neu_Cdh18	second	Exc_Neu
+BLA	8	Exc_neu_Tafa	second	Exc_Neu
+BLA	2	Neu_VGlut2_1	second	Exc_Neu
+BLA	9	Neu_VGlut2_2	second	Exc_Neu
+BLA	4	LA_Neu_ITC_doublet	second	Exc_Neu
+BLA	1	CEA_Inh_Neu_Rarb	second	Inh_Neu
+BLA	2	CEA_Inh_Neu_Fign	second	Inh_Neu
+BLA	4	CEA_Inh_Neu_Arhgap6	second	Inh_Neu
+BLA	8	CEA_Inh_Neu_Ebf1	second	Inh_Neu
+BLA	9	CEA_Neu_Sst	second	Inh_Neu
+BLA	0	ITC_Neu_Penk_posi	second	Inh_Neu
+BLA	5	ITC_Neu_Penk_nega	second	Inh_Neu
+BLA	10	BMA_Inh_Neu_Kit	second	Inh_Neu
+BLA	13	BMA_Inh_Neu_Thsd7a	second	Inh_Neu
+BLA	14	BMA_Inh_Neu_Hcrtr2	second	Inh_Neu
+BLA	3	Inh_Neu_Pvalb	second	Inh_Neu
+BLA	6	Inh_Vip_Neu	second	Inh_Neu
+BLA	7	Inh_Neu_Sst	second	Inh_Neu
+BLA	11	Inh_Neu_Lhx8	second	Inh_Neu
+BLA	12	Inh_Neu_Cartpt	second	Inh_Neu
+BLA	15	undetermined	second	Inh_Neu
+BLA	0	OPC	second	Glia
+BLA	1	Astrocyte_1	second	Glia
+BLA	7	Astrocyte_2	second	Glia
+BLA	3	Olig	second	Glia
+BLA	5	MG	second	Glia
+BLA	6	Ependymal	second	Glia
+BLA	2	InhNeu_doublet_1	second	Glia
+BLA	4	InhNeu_doublet_2	second	Glia
+BLA	8	Astrocyte_OPC_doublet	second	Glia
+BLA	9	Astrocyte_Olig_doublet_1	second	Glia
+BLA	10	Astrocyte_Olig_doublet_2	second	Glia
+Hippo	0	DG_Neu_1	second	Exc_Neu
+Hippo	7	DG_Neu_2	second	Exc_Neu
+Hippo	1	CA1_Neu	second	Exc_Neu
+Hippo	2	CA3_Neu_1	second	Exc_Neu
+Hippo	3	Subiculum_Neu_1	second	Exc_Neu
+Hippo	6	Subiculum_Neu_2	second	Exc_Neu
+Hippo	5	Olig_doublet	second	Exc_Neu
+Hippo	4	Microglia_doublet	second	Exc_Neu
+Hippo	8	undetermined	second	Exc_Neu
+Hippo	0	Sst_Neu	second	Inh_Neu
+Hippo	5	Vip_Neu	second	Inh_Neu
+Hippo	3	InhNeu_1	second	Inh_Neu
+Hippo	4	InhNeu_2	second	Inh_Neu
+Hippo	7	InhNeu_3	second	Inh_Neu
+Hippo	1	Exc_Neu_doublet_1	second	Inh_Neu
+Hippo	6	Exc_Neu_doublet_2	second	Inh_Neu
+Hippo	2	HC2_only	second	Inh_Neu
+Hippo	0	Olig	second	Glia
+Hippo	6	Olig_2	second	Glia
+Hippo	2	Astrocyte	second	Glia
+Hippo	3	OPC	second	Glia
+Hippo	8	undetermined	second	Glia
+Hippo	4	ExcNeu_doublet_1	second	Glia
+Hippo	7	ExcNeu_doublet_2	second	Glia
+Hippo	1	ExcNeu_doublet_3	second	Glia
+Hippo	5	ExcNeu_doublet_4	second	Glia
+mPFC	0	Exc_1	second	Exc_Neu
+mPFC	1	Exc_2	second	Exc_Neu
+mPFC	2	Exc_3	second	Exc_Neu
+mPFC	3	Exc_4	second	Exc_Neu
+mPFC	4	Exc_5	second	Exc_Neu
+mPFC	5	Exc_6	second	Exc_Neu
+mPFC	7	Exc_7	second	Exc_Neu
+mPFC	9	Olig_doublet	second	Exc_Neu
+mPFC	6	Inh_Neu_doublet_1	second	Exc_Neu
+mPFC	8	Inh_Neu_doublet_2	second	Exc_Neu
+mPFC	10	Microglia_doublet	second	Exc_Neu
+mPFC	11	undetermined	second	Exc_Neu
+mPFC	1	Pvalb	second	Inh_Neu
+mPFC	2	Sst	second	Inh_Neu
+mPFC	3	Vip_1	second	Inh_Neu
+mPFC	5	Vip_2	second	Inh_Neu
+mPFC	4	Reln	second	Inh_Neu
+mPFC	0	ExcNeu_doublet	second	Inh_Neu
+mPFC	6	undetermined_1	second	Inh_Neu
+mPFC	7	undetermined_2	second	Inh_Neu
+mPFC	0	Olig	second	Glia
+mPFC	6	NF_Olig	second	Glia
+mPFC	2	Astrocyte	second	Glia
+mPFC	3	Microglia	second	Glia
+mPFC	4	OPC_1	second	Glia
+mPFC	10	OPC_2	second	Glia
+mPFC	7	Ependymal	second	Glia
+mPFC	1	Neuron_doublet_1	second	Glia
+mPFC	5	Neuron_doublet_2	second	Glia
+mPFC	8	undetermined_1	second	Glia
+mPFC	9	undetermined_2	second	Glia
+BLA	0	LA_Rorb	third	Exc_Neu
+BLA	3	LA_Chst9	third	Exc_Neu
+BLA	1	BA	third	Exc_Neu
+BLA	4	BMA	third	Exc_Neu
+BLA	2	VGlut2_1	third	Exc_Neu
+BLA	8	VGlut2_2	third	Exc_Neu
+BLA	5	Exc_Neu_Spag16	third	Exc_Neu
+BLA	6	Exc_Neu_Lypd6b	third	Exc_Neu
+BLA	7	Exc_Neu_Unc13c	third	Exc_Neu
+BLA	2	BLA_Sst	third	Inh_Neu
+BLA	5	BLA_Vip	third	Inh_Neu
+BLA	6	BMA_Inh_1	third	Inh_Neu
+BLA	8	BMA_Inh_2	third	Inh_Neu
+BLA	0	ITC	third	Inh_Neu
+BLA	1	CEA_Fign	third	Inh_Neu
+BLA	3	CEA_Rarb	third	Inh_Neu
+BLA	4	CEA_Arhgap6	third	Inh_Neu
+BLA	7	CEA_Sst	third	Inh_Neu
+BLA	1	Astrocyte_1	third	Glia
+BLA	6	Astrocyte_2	third	Glia
+BLA	0	OPC	third	Glia
+BLA	2	Olig	third	Glia
+BLA	3	MG	third	Glia
+BLA	5	Ependymal	third	Glia
+BLA	4	undetermined	third	Glia
+Hippo	0	DG_1	third	Exc_Neu
+Hippo	6	DG_2	third	Exc_Neu
+Hippo	1	CA1	third	Exc_Neu
+Hippo	2	CA3_1	third	Exc_Neu
+Hippo	4	CA3_2	third	Exc_Neu
+Hippo	3	Subiculum_1	third	Exc_Neu
+Hippo	5	Subiculum_2	third	Exc_Neu
+Hippo	0	Sst	third	Inh_Neu
+Hippo	3	Pvalb_1	third	Inh_Neu
+Hippo	6	Pvalb_2	third	Inh_Neu
+Hippo	4	Vip	third	Inh_Neu
+Hippo	5	Reln	third	Inh_Neu
+Hippo	2	Ntng1	third	Inh_Neu
+Hippo	1	Neurogliaform	third	Inh_Neu
+Hippo	0	Olig_1	third	Glia
+Hippo	5	Olig_2	third	Glia
+Hippo	3	OPC	third	Glia
+Hippo	1	Microglia	third	Glia
+Hippo	2	Astrocytre	third	Glia
+Hippo	4	Endothelial	third	Glia
+Hippo	6	undetermined	third	Glia
+mPFC	0	L2_3_IT_1	third	Exc_Neu
+mPFC	9	L2_3_IT_2	third	Exc_Neu
+mPFC	1	L4_5_IT	third	Exc_Neu
+mPFC	4	L4_5_IT	third	Exc_Neu
+mPFC	3	L5_ET	third	Exc_Neu
+mPFC	6	L5_NP	third	Exc_Neu
+mPFC	2	L6_CT_1	third	Exc_Neu
+mPFC	7	L6_CT_2	third	Exc_Neu
+mPFC	8	L6_CT_3	third	Exc_Neu
+mPFC	5	L6_IT	third	Exc_Neu
+mPFC	10	undetermined	third	Exc_Neu
+mPFC	1	Sst_1	third	Inh_Neu
+mPFC	5	Sst_2	third	Inh_Neu
+mPFC	0	Pvalb	third	Inh_Neu
+mPFC	2	Vip	third	Inh_Neu
+mPFC	3	Reln_1	third	Inh_Neu
+mPFC	4	Reln_2	third	Inh_Neu
+mPFC	6	undetermined_1	third	Inh_Neu
+mPFC	7	undetermined_2	third	Inh_Neu
+mPFC	0	Olig	third	Glia
+mPFC	4	NF_Olig	third	Glia
+mPFC	3	OPC	third	Glia
+mPFC	1	Astrocyte	third	Glia
+mPFC	2	Microglia	third	Glia
+mPFC	5	Ependymal	third	Glia
+mPFC	6	undetermined_1	third	Glia
+mPFC	7	undetermined_2	third	Glia

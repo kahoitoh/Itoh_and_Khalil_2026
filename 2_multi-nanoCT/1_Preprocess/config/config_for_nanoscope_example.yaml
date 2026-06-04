@@ -1,0 +1,14 @@
+samples:
+  example:                                                                         # Change the name of your sample here
+    fastq_path:
+      path_to_your_rawdata        # Modify path to fastq files here
+    barcodes:                                                                            # Define your different antibody barcodes here
+      FOS_ATAC: GGCTCTGA # refer sup table for barcodes
+      FOS_IgG: GTACTGAC 
+      FOS_TF: TATAGCCT 
+
+general:
+  tempdir: path_to_your_temp/   # Modify path to a tmp folder already created here
+  cellranger_software: path_to_your_cellRanger_ATAC/cellranger-atac-2.1.0/bin/cellranger-atac             # Modify the path to cellranger binaries here
+  cellranger_ref: path_to_your_reference/refdata-cellranger-arc-mm10-2020-A-2.0.0/   # Modify the path to cellranger reference here
+  macs_genome: mm                                                                        # Modify genome for macs2 callpeak

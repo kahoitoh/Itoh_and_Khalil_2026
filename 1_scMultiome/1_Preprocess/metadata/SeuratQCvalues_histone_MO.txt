@@ -1,0 +1,4 @@
+region	percent.mt	nFeature_RNA_min	nFeature_RNA_max	nCount_ATAC_min	nCount_ATAC_max	TSS.enrichment	nucleosome_signal
+BLA	3	500	8000	300	100000	1	1.5
+Hippo	3	500	8000	500	100000	1	1.5
+mPFC	3	500	8000	400	100000	1	1.2

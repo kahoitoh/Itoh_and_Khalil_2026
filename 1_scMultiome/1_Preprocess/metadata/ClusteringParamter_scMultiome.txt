@@ -1,0 +1,22 @@
+region	lsi_dims	cluster_resolution	clustering	celltype
+BLA	1:45	0.3	first	
+Hippo	1:40	0.1	first	
+mPFC	1:45	0.1	first	
+BLA	1:35	0.2	second	Exc_Neu
+BLA	1:45	0.3	second	Inh_Neu
+BLA	1:25	0.15	second	Glia
+Hippo	1:45	0.1	second	Exc_Neu
+Hippo	1:50	0.15	second	Inh_Neu
+Hippo	1:25	0.1	second	Glia
+mPFC	1:50	0.3	second	Exc_Neu
+mPFC	1:50	0.15	second	Inh_Neu
+mPFC	1:25	0.1	second	Glia
+BLA	1:45	0.15	third	Exc_Neu
+BLA	1:45	0.15	third	Inh_Neu
+BLA	1:45	0.1	third	Glia
+Hippo	1:40	0.1	third	Exc_Neu
+Hippo	1:40	0.25	third	Inh_Neu
+Hippo	1:23	0.08	third	Glia
+mPFC	1:50	0.4	third	Exc_Neu
+mPFC	1:50	0.15	third	Inh_Neu
+mPFC	1:35	0.1	third	Glia
