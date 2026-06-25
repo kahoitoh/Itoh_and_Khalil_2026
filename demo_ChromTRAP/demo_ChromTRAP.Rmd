@@ -1,0 +1,126 @@
+---
+title: "demo_ChromTRAP"
+author: "Kaho Itoh"
+date: "2026-06-25"
+output: 
+  github_document:
+      toc: true
+---
+
+# Demo ChromTRAP analysis
+
+This demo reproduces the key ChromTRAP-based differential expression analysis
+using a downsampled Seurat object.
+
+The demo object, `SO_demo.rds`, contains cells from the BLA region only.  
+Specifically, it includes excitatory neuron subtypes from the basal amygdala
+(BA) and lateral amygdala (LA). This reduced object is provided so that the
+main analysis can be run quickly without requiring the full Seurat object.
+
+In this example, cells are classified by AP-1 / FOS motif activity using the
+chromVAR deviation score for motif `MA1141.2`. Cells in the top quantile are
+defined as motif-high cells, and cells in the bottom quantile are defined as
+motif-low cells within each sample group.
+
+# Load libraries
+
+```{r setup, message=FALSE, warning=FALSE}
+library(Seurat)
+library(dplyr)
+```
+
+# Config
+
+```{r config}
+percentile_high <- 0.9
+percentile_low <- 0.1
+```
+
+# Load demo data
+
+```{r load-data}
+SO <- readRDS("SO_demo.rds")
+```
+
+The demo object contains the following number of cells per annotation and sample:
+
+```{r check-demo-object}
+table(SO@meta.data$Annotation, SO@meta.data$Sample)
+```
+
+The AP-1 / FOS motif activity score is extracted from the chromVAR assay using
+motif ID `MA1141.2`.
+
+```{r extract-chromvar-score, warning=FALSE, message=FALSE}
+chromvar_mat <- GetAssayData(
+  object = SO,
+  assay = "chromvar",
+  slot = "data"
+)
+
+chromvar_count_selected <- chromvar_mat["MA1141.2", ]
+```
+
+# Define motif-high and motif-low cells
+
+Cells are ranked by chromVAR score within each sample group.  
+Here, the top 10% of cells are defined as motif-high cells, and the bottom 10%
+are defined as motif-low cells.
+
+```{r define-high-low-cells}
+df_chromvar_count <- data.frame(
+  ChromVAR_count = as.numeric(chromvar_count_selected),
+  CellID = names(chromvar_count_selected),
+  HC_Cond4h = SO@meta.data[names(chromvar_count_selected), "Sample"]
+)
+
+df_High <- df_chromvar_count %>%
+  group_by(HC_Cond4h) %>%
+  mutate(q = quantile(ChromVAR_count, percentile_high, na.rm = TRUE)) %>%
+  dplyr::filter(ChromVAR_count >= q)
+
+df_Low <- df_chromvar_count %>%
+  group_by(HC_Cond4h) %>%
+  mutate(q = quantile(ChromVAR_count, percentile_low, na.rm = TRUE)) %>%
+  dplyr::filter(ChromVAR_count <= q)
+```
+
+
+# Select cells for ChromTRAP comparison
+
+In this demo, we compare Cond4h motif-high cells against HC motif-low cells.
+
+```{r select-trapped-cells}
+Cond_High_CellID <- df_High$CellID[df_High$HC_Cond4h == "Cond4h"]
+HC_Low_CellID <- df_Low$CellID[df_Low$HC_Cond4h == "HC"]
+
+cells_use <- c(Cond_High_CellID, HC_Low_CellID)
+
+SO_trapped <- subset(SO, cells = cells_use)
+
+SO_trapped$ChromTRAP_group <- case_when(
+  colnames(SO_trapped) %in% Cond_High_CellID ~ "Cond4h_High",
+  colnames(SO_trapped) %in% HC_Low_CellID ~ "HC_Low"
+)
+
+table(SO_trapped$ChromTRAP_group)
+```
+
+# Differential expression analysis
+
+Differential expression is performed between Cond4h motif-high cells and HC
+motif-low cells using the SCT assay.
+
+```{r find-markers, warning=FALSE, message=FALSE}
+FM_res <- FindMarkers(
+  object = SO_trapped,
+  ident.1 = Cond_High_CellID,
+  ident.2 = HC_Low_CellID,
+  test.use = "wilcox",
+  min.pct = 0.01,
+  assay = "SCT"
+)
+
+head(FM_res)
+```
+
