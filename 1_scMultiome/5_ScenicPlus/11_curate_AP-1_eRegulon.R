@@ -71,7 +71,7 @@ AP1_eRegulon_NAME_LIST <- if(REGION == "BLA"){
   
 }
 
-FINAL_RES_DIR <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/5_ScenicPlus/data"
+FINAL_RES_DIR <- "path/to/your/final/res"
 
 
 # import GRN result ------------------------------------------------------------

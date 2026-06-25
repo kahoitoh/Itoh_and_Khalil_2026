@@ -27,7 +27,8 @@ library(eulerr)
 # Config------------------------------------------------------------------------
 region <- "BLA" # or "Hippo"
 
-SO <- readRDS("D:/in_vivo_Multiome_EngramProject/FOS-FACS-Sort_MO/BLA_SO_chromVAR.rds") # seurat object containing FOS-FACS-sorted Cond 4h and whole nuclei HC
+PATH_TO_SO_FACS_MO <- "path/to/your/SO_FACS_MO"
+SO <- readRDS(paste0(finalres_dir, "/", region, "_", "SO_chromVAR.rds")) # from 1_scMultiome/1_Preprocess/3_PreProcess_FOS_FACS_scMultiome.R
 
 CellTypes_selected <- if(region == "Hippo"){
   c("DG_1", "DG_2", "CA1", "CA3_Col6a1", "CA3_Kcnq5")
@@ -35,10 +36,11 @@ CellTypes_selected <- if(region == "Hippo"){
   c("BA", "LA")
 }
 
-DEseq2res_CondHigh_vs_HCLow <- read.table(paste0("D:/in_vivo_Multiome_EngramProject/FOS-FACS-Sort_MO/", region, "_DEseqres_CondHigh_vs_HCLow.txt"), 
-                                          header = T, sep = "\t") # output from .R
+PATH_TO_DEseq2res_FACS_MO <- "path/to/your/SO_FACS_MO/DESeq2/res"
+DEseq2res_CondHigh_vs_HCLow <- read.table(paste0(PATH_TO_DEseq2res_FACS_MO, "/", region, "_DEseqres_CondHigh_vs_HCLow.txt"), 
+                                          header = T, sep = "\t") # output from 1_scMultiome/4_DEG_to_benchmark_ChromTRAP/1_DEG_to_benchmark_ChromTRAP_CondHigh_vs_HCLow.R
 
-finalres_dir <- "D:/in_vivo_Multiome_EngramProject/FOS-FACS-Sort_MO" #"path_to_final_res"
+finalres_dir <- "path/to/final/res" 
 
 # chromTRAP---------------------------------------------------------------------
 SO_ExcNeu <- subset(SO, Annotation %in% CellTypes_selected)

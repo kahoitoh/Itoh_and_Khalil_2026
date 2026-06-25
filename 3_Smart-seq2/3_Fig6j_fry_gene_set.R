@@ -30,20 +30,20 @@
 #     contrast.
 # ==============================================================================
 
-
 library(edgeR)
 library(limma)
 library(dplyr)
 
 # config -----------------------------------------------------------------------
-PATH_TO_MO_GRN_LAG <- "D:/in_vivo_Multiome_EngramProject/BaseAnalysis_BLA/13_Scenicplus_optimized/subRegion/Conditioning_Associated_Genes_intersect_before_enh_filtering_with_DEG"
-PATH_TO_RAWCOUNT <- "D:/in_vivo_Multiome_EngramProject/Github/3_Smart-seq2/data"
+PATH_TO_MO_GRN_LAG <- "path/to/clustering/res" # from 1_scMultiome/6_Learning_associated_genes
+PATH_TO_RAWCOUNT <- "path/to/rawCount"
+PATH_TO_FINAL <- "path/to/final"
 
 # Load bulk RNA-seq count table and scMultiome-derived gene sets ---------------
 RawCount <- read.table(paste0(PATH_TO_RAWCOUNT, "/RawCountTableContainingAllSamples.txt"),
                        sep = "\t", header = TRUE, check.names = FALSE)
 
-MO_DEG_GRN_overlap_Genes <- read.table(paste0(PATH_TO_MO_GRN_LAG, "/Clustered_GRN_CAG_intersection.txt"),
+MO_DEG_GRN_overlap_Genes <- read.table(paste0(PATH_TO_MO_GRN_LAG, "/Clustered_AP1_SRG_BLA.txt"),
                                        header = TRUE, sep = "\t")
 
 MO_CAG <- MO_DEG_GRN_overlap_Genes$GeneName[
@@ -108,5 +108,5 @@ fry_res_2h <- fry(
   contrast = cont_2h[, "Cond2h_vs_other2h"]
 )
 
-write.table(fry_res_2h, "Fig6j_fry_gene_set_test_results.txt",
+write.table(fry_res_2h, paste0(PATH_TO_FINAL, "/Fig6j_fry_gene_set_test_results.txt"),
             quote = FALSE, sep = "\t")

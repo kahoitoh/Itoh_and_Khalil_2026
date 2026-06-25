@@ -23,9 +23,6 @@ library(DESeq2)
 
 # Config------------------------------------------------------------------------
 region <- "BLA" # or "Hippo"
-
-SO_VGlut <- readRDS("D:/in_vivo_Multiome_EngramProject/BaseAnalysis_BLA/6_ATAC_ChromVAR/SO_VGlut_chromVAR.rds") # seurat object containing Exc neurons in whole nuclei sequencing data
-
 CellTypes_selected <- if(region == "Hippo"){
   c("DG_Neu_1", "DG_Neu_2", "CA1_Neu", "CA3_Neu", "CA3_Neu_St18")
   }else if(region == "BLA"){
@@ -33,6 +30,9 @@ CellTypes_selected <- if(region == "Hippo"){
   }
 
 finalres_dir <- "path_to_final_res"
+
+RESULT_DIR_SO_MO <- "path/to/your/MO/SeuratObject"
+SO_VGlut <- paste0(RESULT_DIR_SO_MO, "/", REGION, "_SO_list_Annotated.rds")[[1]] # use Exc neuron. from 1_scMultiome/1_Preprocess/4_PreProcess_whole_nuclei_scMultiome_each_brain_region.R
 
 # ChromTRAP --------------------------------------------------------------------
 SO_VGlut <- subset(SO_VGlut, SCT_snn_res.0.15_Anno %in% CellTypes_selected)

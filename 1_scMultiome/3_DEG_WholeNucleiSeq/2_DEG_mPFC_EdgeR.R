@@ -31,7 +31,7 @@ library(edgeR)
 library(tibble)
 
 # config -----------------------------------------------------------------------
-RESULT_DIR_FINAL <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/3_DEG_WholeNucleiSeq/data"
+RESULT_DIR_FINAL <- "path/to/Github/1_scMultiome/3_DEG_WholeNucleiSeq/data"
 PATH_to_SO <- "/path/to/SeuratObjectList"
 
 # helper -----------------------------------------------------------------------

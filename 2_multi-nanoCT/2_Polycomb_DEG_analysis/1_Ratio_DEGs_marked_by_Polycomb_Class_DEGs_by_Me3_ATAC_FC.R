@@ -73,9 +73,9 @@ library(edgeR)
 # Config -----------------------------------------------------------------------
 REGION <- c("BLA", "Hippo", "mPFC")[1]
 
-RESULT_DIR_FINAL <- paste0("D:/in_vivo_nanoCT_2502/nCT_", REGION, "_baseres_rm_HC1_ATAC_Cells_Having_All_modalities")
-RESULT_DIR_EPIC2 <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/data"
-RESULT_DIR_DEGs_MO <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/3_DEG_WholeNucleiSeq/data"
+RESULT_DIR_FINAL <- paste0("path/to/your/nCT_", REGION, "_baseres_Cells_Having_All_modalities")
+RESULT_DIR_EPIC2 <- "path/to/your/epic2/res"
+RESULT_DIR_DEGs_MO <- "path/to/your/MO_wholenuclei"
 PATH_GTF <- "path/to/your/Mus_musculus.GRCm38.102.chr.gtf" # https://ftp.ensembl.org/pub/release-102/gtf/mus_musculus/
 RESULT_DIR_FIG <- "path/to/final/res"
 RESULT_DIR_SO_MO <- "path/to/your/MO/SeuratObject"

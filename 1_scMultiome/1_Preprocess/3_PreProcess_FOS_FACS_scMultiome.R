@@ -153,9 +153,9 @@ SO[["peaks"]] <- CreateChromatinAssay(
 # process RNA data -------------------------------------------------------------
 DefaultAssay(SO) <- "RNA"
 
-# Run following only for dHippo ########################################
-SO@assays$RNA <- split(x = SO@assays$RNA, f = SO@meta.data$Sample)    #
-#######################################################################
+if(REGION == "Hippo"){
+  SO@assays$RNA <- split(x = SO@assays$RNA, f = SO@meta.data$Sample)
+}
 
 # log-normalization
 SO <- SCTransform(SO)

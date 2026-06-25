@@ -21,7 +21,7 @@ while read line1 <&3; do
     result/trimming/unpaired_${line1}_L1_1_trim.fastq \
     result/trimming/paired_${line1}_L1_2_trim.fastq \
     result/trimming/unpaired_${line1}_L1_2_trim.fastq \
-    ILLUMINACLIP:/home/kitoh/miniconda3/envs/ChIPseq/share/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10 \
+    ILLUMINACLIP:/path/to/your/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10 \ # modify this before running
     MINLEN:30 \
     LEADING:3 \
     TRAILING:3 \

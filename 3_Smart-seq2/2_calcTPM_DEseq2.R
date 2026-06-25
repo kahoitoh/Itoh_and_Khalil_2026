@@ -29,11 +29,16 @@ library(dplyr)
 library(rtracklayer)
 library(DESeq2)
 
+# config -----------------------------------------------------------------------
+path_to_raw_count <- "path/to/rawCount"
+path_to_reference_annotation <- "path/to/reference/annotation"
+path_to_final_res <- "path/to/final"
+
 # import rawCount
 # Expected input format:
 # Geneid | Chr | Start | End | Strand | Length | BLA_Cond_1h_1 | BLA_Cond_1h_2 | BLA_Cond_1h_3 | ...
 CountTable_raw <- read.table(
-  "RawCountTableContainingAllSamples.txt",
+  paste0(path_to_raw_count, "/RawCountTableContainingAllSamples.txt"),
   header = TRUE,
   sep = "\t",
   check.names = FALSE
@@ -70,11 +75,11 @@ for (i in count_columns) {
 
 colnames(TPMTable)[(length(annotation_columns) + 1):ncol(TPMTable)] <- count_columns
 
-write.table(TPMTable, "filteredTPM.txt", quote = F, sep = "\t")
+write.table(TPMTable, paste0(path_to_final_res, "/filteredTPM.txt"), quote = F, sep = "\t")
 
 # Perform DEseq2 ##############################################################################
 # import GTF files
-GTF <- readGFF("path_to_reference_annotation/Mus_musculus.GRCm38.102.chr.gtf")
+GTF <- readGFF(paste0(path_to_reference_annotation, "/Mus_musculus.GRCm38.102.chr.gtf"))
 GTF_selected <- GTF[,c("gene_id", "gene_name", "gene_biotype")] %>% distinct()
 colnames(GTF_selected)[1] <- "Geneid"
 
@@ -142,10 +147,10 @@ for (i in seq_along(DEseq_res_list)){
   
 }
 
-write.table(DEG_summary_df, "UpDEG_summary_df.txt", quote = F, sep = "\t")
-write.table(DEseq_res_list$BLA_Cond_1h, "DEseq2_Cond1h_vs_HC.txt", quote = F, sep = "\t")
-write.table(DEseq_res_list$BLA_Cond_2h, "DEseq2_Cond2h_vs_HC.txt", quote = F, sep = "\t")
-write.table(DEseq_res_list$BLA_Cond_4h, "DEseq2_Cond4h_vs_HC.txt", quote = F, sep = "\t")
+write.table(DEG_summary_df, paste0(path_to_final_res, "/UpDEG_summary_df.txt"), quote = F, sep = "\t")
+write.table(DEseq_res_list$BLA_Cond_1h, paste0(path_to_final_res, "/DEseq2_Cond1h_vs_HC.txt"), quote = F, sep = "\t")
+write.table(DEseq_res_list$BLA_Cond_2h, paste0(path_to_final_res, "/DEseq2_Cond2h_vs_HC.txt"), quote = F, sep = "\t")
+write.table(DEseq_res_list$BLA_Cond_4h, paste0(path_to_final_res, "/DEseq2_Cond4h_vs_HC.txt"), quote = F, sep = "\t")
 
 # Perform clustering of DEGs ###############################################################################
 samples <- c("HC",
@@ -207,8 +212,8 @@ hm <- Heatmap(TPM_clustered[,1:10] %>% as.matrix(),
         ))
 
 
-write.table(TPM_clustered, "bulk_CondDEG_Clustering.txt", quote = F, sep = "\t")
+write.table(TPM_clustered, paste0(path_to_final_res, "/bulk_CondDEG_Clustering.txt"), quote = F, sep = "\t")
 
-pdf("bulk_CondDEG_Clustering_heatmap.pdf", width = 7, height = 8)
+pdf(paste0(path_to_final_res, "/bulk_CondDEG_Clustering_heatmap.pdf"), width = 7, height = 8)
 draw(hm)
 dev.off()

@@ -44,7 +44,7 @@ for ((i=0; i<$length; i++)); do
     ${assay[$i]}/unpaired_L1_1_trim.fastq \
     ${assay[$i]}/paired_L1_2_trim.fastq \
     ${assay[$i]}/unpaired_L1_2_trim.fastq \
-    ILLUMINACLIP:/home/kitoh/miniconda3/envs/ChIPseq/share/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10:8:TRUE \
+    ILLUMINACLIP:/path/to/your/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10:8:TRUE \ # modify this before running
     MINLEN:30 \
     LEADING:3 \
     TRAILING:3 \
@@ -60,7 +60,7 @@ for ((i=0; i<$length; i++)); do
     ${assay[$i]}/unpaired_L2_1_trim.fastq \
     ${assay[$i]}/paired_L2_2_trim.fastq \
     ${assay[$i]}/unpaired_L2_2_trim.fastq \
-    ILLUMINACLIP:/home/kitoh/miniconda3/envs/ChIPseq/share/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10:8:TRUE \
+    ILLUMINACLIP:/path/to/your/trimmomatic/adapters/NexteraPE-PE.fa:2:10:10:8:TRUE \
     MINLEN:30 \
     LEADING:3 \
     TRAILING:3 \

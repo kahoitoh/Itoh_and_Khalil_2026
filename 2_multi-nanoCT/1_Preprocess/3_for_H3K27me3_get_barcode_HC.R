@@ -29,9 +29,9 @@ library(Seurat)
 # Config -----------------------------------------------------------------------
 REGION <- c("BLA", "Hippo", "mPFC")[3]
 
-RESULT_DIR_FINAL <- paste0("D:/in_vivo_nanoCT_2502/nCT_", REGION, "_baseres_rm_HC1_ATAC_Cells_Having_All_modalities")
+RESULT_DIR_FINAL <- paste0("path/to/your/res/nCT_", REGION, "_baseres_Cells_Having_All_modalities")
 
-combined_objects <- readRDS(paste0(RESULT_DIR_FINAL, "/", REGION, "_combined_SO_with_celltype_peak_scores.rds"))
+combined_objects <- readRDS(paste0(RESULT_DIR_FINAL, "/", REGION, "_combined_SO_ChromVAR.rds")) # from 2_multi-nanoCT/1_Preprocess/2_for_histone_built_SeuratObject.R
 
 celltype_neuron <- if(REGION == "BLA"){
   c("BA", "LA", "Sst", "Vip")

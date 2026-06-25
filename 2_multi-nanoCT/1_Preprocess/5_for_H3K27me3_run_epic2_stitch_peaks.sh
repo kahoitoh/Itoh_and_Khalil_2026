@@ -17,8 +17,8 @@
 
 # config --------------------------------------------------------------------------------------
 
-cd /faststorage/project/kitazawa_lab/Kaho/in_vivo_nanoCT_2502/Sinto/Neuron_HC_filterbam
-dir_nanoscope_res='/faststorage/project/kitazawa_lab/Taro/nanoCT_project/results_nanoscope'
+cd /path/to/your/working/dir
+dir_nanoscope_res='/path/to/your/results_nanoscope'
 
 # perform epic2 and stitching peaks -----------------------------------------------------------
 for region in BLA Hippo mPFC

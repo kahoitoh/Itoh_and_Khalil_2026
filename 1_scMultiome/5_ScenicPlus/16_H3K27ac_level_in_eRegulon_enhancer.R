@@ -50,10 +50,10 @@ library(stringr)
 library(purrr)
 
 # config -----------------------------------------------------------------------
-PATH_TO_eREGULON <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/5_ScenicPlus/data"
-FINAL_RES_PATH <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/data"
+PATH_TO_eREGULON <- "path/to/your/eRegulon_res"
+FINAL_RES_PATH <- "path/to/your/final/res"
 REGION <- c("BLA", "Hippo", "mPFC")[1]
-RESULT_DIR_FINAL <- paste0("D:/in_vivo_nanoCT_2502/nCT_", REGION, "_baseres_rm_HC1_ATAC_Cells_Having_All_modalities")
+RESULT_DIR_FINAL <- paste0("path/to/your/res")
 
 CELLTYPE_to_CHOOSE <- if(REGION == "BLA"){
   

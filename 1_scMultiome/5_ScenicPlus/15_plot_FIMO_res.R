@@ -24,7 +24,7 @@ library(ggplot2)
 
 # config -----------------------------------------------------------------------
 REGION <- c("BLA", "Hippo", "mPFC")[1]
-OUT_DIR <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/5_ScenicPlus/FIMO_summary"
+OUT_DIR <- "path/to/your/final/res"
 FIMO_RES_DIR <- "path/to/res"
 BED_DIR <- "path/to/specific/enhancer/bed"
 

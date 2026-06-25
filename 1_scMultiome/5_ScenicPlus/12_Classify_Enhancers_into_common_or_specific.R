@@ -54,7 +54,7 @@ library(EnsDb.Mmusculus.v79)
 library(stringr)
 
 # config -----------------------------------------------------------------------
-REGION <- c("BLA", "Hippo", "mPFC")[3]
+REGION <- c("BLA", "Hippo", "mPFC")[1]
 PATH_TO_SEURAT_OBJECT <- "path/to/your/SeuratObject"
 PATH_TO_YOUR_FRAGMENT_FILE <- "path/to/your/atac_fragments.tsv.gz"
 FINAL_RES_DIR <- "path/to/final/res"

@@ -24,9 +24,9 @@ ls /path/to/aertslab_motif_collection/v10nr_clust_public/singletons > motifs.txt
 CBDIR="path_to_/v10nr_clust_public/singletons"
 FASTA_FILE="mm10.10x_brain.with_1kb_bg_padding.fa"
 MOTIF_LIST="motifs.txt"
-CBUST="/home/kitoh/kitazawa_lab/Kaho/SCENIC_data/cbust"
+CBUST="/path/to/your/SCENIC_data/cbust" # modify this before running
 DATABASE_PREFIX="10x_brain_1kb_bg_with_mask"
-SCRIPT_DIR="/home/kitoh/kitazawa_lab/Kaho/SCENIC_data/create_cisTarget_databases"
+SCRIPT_DIR="/path/to/your/SCENIC_data/create_cisTarget_databases"  # modify this before running
 
 "${SCRIPT_DIR}/create_cistarget_motif_databases.py" \
     -f ${FASTA_FILE} \
