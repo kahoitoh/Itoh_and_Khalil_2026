@@ -1,4 +1,36 @@
+#!/usr/bin/env Rscript
 
+# ==============================================================================
+# Cluster AP-1 eRegulon-associated stimulus-responsive genes
+# ------------------------------------------------------------------------------
+# Identify excitatory-neuron upregulated DEGs that overlap AP-1 eRegulon target
+# genes, classify cells by FOS motif chromVAR score, and cluster AP-1 SRGs by
+# their expression patterns across FOS-motif high/low groups.
+#
+# In this analysis, genes whose expression is higher in Cond4h FOS-motif-high
+# cells than in HC FOS-motif-high cells are defined as learning-associated genes.
+#
+# Main steps:
+#   1. Load DEG table, AP-1 eRegulon genes, and annotated scMultiome object
+#   2. Select region-specific excitatory-neuron upregulated DEGs
+#   3. Intersect DEGs with AP-1 eRegulon target genes
+#   4. Define FOS-motif high/low cells within each sample
+#   5. Calculate mean SCT expression of AP-1 SRGs in each group
+#   6. Cluster genes and save the result
+#
+# Inputs:
+#   - DEGs_all_region_list_summary.txt
+#   - AP1_eRegulon_REGION.csv
+#   - REGION_SO_list_Annotated.rds
+#
+# Output:
+#   - Clustered_AP1_SRG_REGION.txt
+# ==============================================================================
+
+library(Seurat)
+library(dplyr)
+library(Matrix)
+library(ComplexHeatmap)
 
 # config -----------------------------------------------------------------------
 REGION <- c("BLA", "Hippo", "mPFC")[1]
@@ -38,7 +70,7 @@ CellID_for_TRAP_list <- lapply(c("LA-Chst9", "BA"),
                                function(ct){
                                  
                                  tmp_meta <- SO_MO_Exc@meta.data[,c("Annotation", "Condition", "FOS_MotifScore", "CellID")]
-                                 tmp_meta <- tmp_meta[which(tmp_meta$Annotation_simple %in% ct),]
+                                 tmp_meta <- tmp_meta[which(tmp_meta$Annotation %in% ct),]
                                  tmp_meta$Sample <- sub("-1|-2", "", tmp_meta$Condition)
                                  
                                  tmp_meta <- tmp_meta %>% 
@@ -67,7 +99,7 @@ SO_MO_Exc_TRAP@meta.data$Class_TRAP <- tmp_meta$Class
 # Perform hierarchical clustering of AP1-SRG among four groups defined by ChromTRAP
 ## get expression levels of AP-1 SRG
 gene_count <- GetAssayData(SO_MO_Exc_TRAP, assay = "SCT", slot = "data")
-index <- which(rownames(gene_count) %in% GRN_Gene_list)
+index <- which(rownames(gene_count) %in% SRG_AP1)
 gene_count_selected <- gene_count[index,]
 
 cell_cond <- SO_MO_Exc_TRAP@meta.data[colnames(gene_count_selected), "Class_TRAP"]
