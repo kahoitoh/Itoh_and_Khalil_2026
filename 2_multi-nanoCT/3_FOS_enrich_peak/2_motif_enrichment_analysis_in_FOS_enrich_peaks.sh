@@ -2,7 +2,7 @@
 
 # Perform motif enrichment analysis for FOS-enriched peaks
 
-cd cd /path/to/output/preprocess
+cd /path/to/output/preprocess
 
 for name in BLA dHPC Cortex
 do

@@ -3,7 +3,7 @@
 Preprocessing and downstream analysis for single-cell multiplexed nanoCT / nanoCTF data.
 
 ## Flow
-### `1_Preprocess`
+### `1_Preprocess`:  
 
 Preprocessing workflow for multiplexed nanoCT / nanoCTF data.
 
@@ -13,4 +13,10 @@ See `1_Preprocess/README.md` for the detailed workflow.
 
 ### `2_Polycomb_DEG_analysis`: 
 
+Analyzes the relationship between Polycomb-associated H3K27me3 broad peaks and learning-related DEGs.
+
+
 ### `3_FOS_enrich_peak`: 
+
+Identifies FOS-enriched peaks from nanoCTF TF and 1st-antibody-negative control data, then characterizes these peaks by motif enrichment and TF/control signal profiles.
+
