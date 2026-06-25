@@ -1,5 +1,65 @@
 #!/usr/bin/env Rscript
 
+# ==============================================================================
+# Analyze Polycomb-associated H3K27me3 broad peaks in nanoCT Seurat objects
+# ------------------------------------------------------------------------------
+# Purpose:
+#   This script identifies H3K27me3 broad peaks overlapping gene bodies and
+#   promoter regions, evaluates whether upregulated DEGs are covered by these
+#   Polycomb-associated regions, and compares H3K27me3 signal changes from nanoCT
+#   with ATAC signal changes from matched scMultiome data.
+#
+# Inputs:
+#   - Region-specific combined nanoCT Seurat object with ChromVAR results:
+#       <REGION>_combined_SO_ChromVAR.rds
+#   - Region-specific epic2-called H3K27me3 broad peak BED file:
+#       <REGION>_me_HC_merged10kb.bed
+#   - DEG summary table from whole-nuclei multiome analysis:
+#       DEGs_all_region_list_summary.txt
+#   - Mouse gene annotation GTF file:
+#       Mus_musculus.GRCm38.102.chr.gtf
+#
+# Requirements:
+#   - The Seurat object must contain the following modalities:
+#       K27me3_me, ATAC_aa, K27ac_ac
+#   - Cell-type annotations must be stored in the metadata column:
+#       Annotation
+#   - Sample labels must be stored in the metadata column:
+#       sample
+#   - H3K27ac ChromVAR scores are extracted from motif:
+#       MA1141.2
+#
+# Notes:
+#   - Edit the CONFIG section before running.
+#   - REGION can be set to BLA, Hippo, or mPFC.
+#   - Region-specific excitatory neuron subtypes are defined in SUBCellTYPE_LIST.
+#   - Only epic2-called H3K27me3 peaks larger than 10 kb are used.
+#   - H3K27me3 peaks are annotated by overlap with gene bodies plus ±2 kb
+#     promoter regions.
+#   - Cells are classified as H3K27ac-high or H3K27ac-low using the top 20%
+#     and bottom 20% of ChromVAR scores within each cell type and sample.
+#   - ATAC and H3K27me3 signals are quantified over the same H3K27me3 broad
+#     peak regions and normalized using TF-IDF / TMM-based CPM.
+#   - ATAC signal used for DEG/nonDEG log2FC classification is not taken from
+#     nanoCT ATAC modality. Instead, it is imported from the matched scMultiome
+#     Seurat object.
+#   - Both ATAC and H3K27me3 signals are quantified over the same epic2-called
+#     H3K27me3 broad peak regions, then compared between H3K27ac-high and
+#     H3K27ac-low cells.
+#
+# Outputs:
+#   - Annotated H3K27me3 broad peaks:
+#       <REGION>_H3K27me_Annotated_over10kb.txt
+#   - Seurat object with broad peak H3K27me3 and ATAC count assays:
+#       <REGION>_combined_SO_with_broadPeak_me3_Counts.rds
+#   - Bar plot of DEG coverage by Polycomb-associated H3K27me3 peaks:
+#       <REGION>Barplt_Ratio_of_DEGs_targeted_by_polycome_H3K27me3.png
+#       <REGION>Barplt_Ratio_of_DEGs_targeted_by_polycome_H3K27me3.pdf
+#   - Bar plot of ATAC / H3K27me3 log2FC classes in DEG and non-DEG peaks:
+#       <REGION>Barplt_Ratio_of_ClassedDEGs_me3_ATAC_FC.png
+#       <REGION>Barplt_Ratio_of_ClassedDEGs_me3_ATAC_FC.pdf
+# ==============================================================================
+
 library(Seurat)
 library(Signac)
 library(dplyr)
@@ -11,20 +71,21 @@ library(ggplot2)
 library(edgeR)
 
 # Config -----------------------------------------------------------------------
-REGION <- c("BLA", "Hippo", "mPFC")[2]
+REGION <- c("BLA", "Hippo", "mPFC")[1]
 
 RESULT_DIR_FINAL <- paste0("D:/in_vivo_nanoCT_2502/nCT_", REGION, "_baseres_rm_HC1_ATAC_Cells_Having_All_modalities")
 RESULT_DIR_EPIC2 <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/data"
 RESULT_DIR_DEGs_MO <- "D:/in_vivo_Multiome_EngramProject/Github/1_scMultiome/3_DEG_WholeNucleiSeq/data"
-PATH_GTF <- "C:/Users/kahoi/Documents/kitazawalab_project/reference_annotation/Mus_musculus.GRCm38.102.chr.gtf" # https://ftp.ensembl.org/pub/release-102/gtf/mus_musculus/
-RESULT_DIR_FIG <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/data"
+PATH_GTF <- "path/to/your/Mus_musculus.GRCm38.102.chr.gtf" # https://ftp.ensembl.org/pub/release-102/gtf/mus_musculus/
+RESULT_DIR_FIG <- "path/to/final/res"
+RESULT_DIR_SO_MO <- "path/to/your/MO/SeuratObject"
 
 SUBCellTYPE_LIST <- if(REGION == "BLA"){
-  list("Exc" = c("LA", "BA"),
-       "Inh" = c("Sst", "Vip"))
+  c("LA", "BA")
 }else if(REGION == "Hippo"){
-  list("Exc" = c("DG", "CA1", "CA3"),
-       "Inh" = c("Inh"))
+  c("DG", "CA1", "CA3")
+}else if(REGION == "mPFC"){
+  c("L2_3_IT", "L4_5_IT", "L5_ET", "L5_NP", "L6_CT", "L6_IT")
 }
 # Helper -----------------------------------------------------------------------
 Check_gene_included_func <- function(genes_of_interest, df){
@@ -66,29 +127,23 @@ calc_TMM_norm_TPM <- function(RawCount){
  
 }
 
-calc_log2FC <- function(Count, deg){
+calc_log2FC <- function(Count, deg, df_chromvar_count_High, df_chromvar_count_Low){
   
-  df_peaks_annotated_to_DEGs_list <- lapply(1:2, 
-                                            function(n){
-                                              
-                                              CellID_High <- df_chromvar_count_High$CellID[which((df_chromvar_count_High$CellType %in% SUBCellTYPE_LIST[[n]]) & (df_chromvar_count_High$sample == "Cond"))]
-                                              CellID_Low <- df_chromvar_count_Low$CellID[which((df_chromvar_count_Low$CellType %in% SUBCellTYPE_LIST[[n]]) & (df_chromvar_count_Low$sample == "Cond"))]
-                                              
-                                              df_High_Low <- data.frame(high = Count[,CellID_High] %>% rowMeans(),
-                                                                        low = Count[,CellID_Low] %>% rowMeans())
-                                              
-                                              df_High_Low_norm <- calc_TMM_norm_TPM(df_High_Low)
-                                              
-                                              if(deg == T){
-                                                df_peaks_annotated <- df_High_Low_norm[which(rownames(df_High_Low_norm) %in% paste0("chr", WholePeaks_anno_list[[n]]$peak_id)),] %>% as.data.frame()
-                                              }else if(deg == F){
-                                                df_peaks_annotated <- df_High_Low_norm[-which(rownames(df_High_Low_norm) %in% paste0("chr", WholePeaks_anno_list[[n]]$peak_id)),] %>% as.data.frame()
-                                              }
-                                              df_peaks_annotated$log2FC <- log2( (df_peaks_annotated[,"high"] + 1) / (df_peaks_annotated[,"low"] + 1) )
-                                              df_peaks_annotated
-                                            })
-  df_peaks_annotated_to_DEGs <- rbind(df_peaks_annotated_to_DEGs_list[[1]], df_peaks_annotated_to_DEGs_list[[2]])
-  df_peaks_annotated_to_DEGs
+  CellID_High <- df_chromvar_count_High$CellID[which((df_chromvar_count_High$CellType %in% SUBCellTYPE_LIST) & (df_chromvar_count_High$sample == "Cond"))]
+  CellID_Low <- df_chromvar_count_Low$CellID[which((df_chromvar_count_Low$CellType %in% SUBCellTYPE_LIST) & (df_chromvar_count_Low$sample == "Cond"))]
+  
+  df_High_Low <- data.frame(high = Count[,CellID_High] %>% rowMeans(),
+                            low = Count[,CellID_Low] %>% rowMeans())
+  
+  df_High_Low_norm <- calc_TMM_norm_TPM(df_High_Low)
+  
+  if(deg == T){
+    df_peaks_annotated <- df_High_Low_norm[which(rownames(df_High_Low_norm) %in% paste0("chr", WholePeaks_anno_list[[1]]$peak_id)),] %>% as.data.frame()
+  }else if(deg == F){
+    df_peaks_annotated <- df_High_Low_norm[-which(rownames(df_High_Low_norm) %in% paste0("chr", WholePeaks_anno_list[[1]]$peak_id)),] %>% as.data.frame()
+  }
+  df_peaks_annotated$log2FC <- log2( (df_peaks_annotated[,"high"] + 1) / (df_peaks_annotated[,"low"] + 1) )
+  df_peaks_annotated
   
 }
 
@@ -195,7 +250,7 @@ g_ratio_DEG <- ggplot(df_plt_number, aes(x = Class, y = Ratio_DEG, fill = Class_
   theme_minimal() +
   scale_fill_manual(values = c("DEG_peak" = "orange",
                                "DEG_non_peak" = "gray")) +
-  ylab("Number of Genes") +
+  ylab("Ratio of Genes") +
   xlab("") +
   labs(title = "Ratio of DEGs targeted by polycome")
 
@@ -229,65 +284,65 @@ DefaultAssay(combined_objects$K27me3_me) <- "broadPeak_H3K27me3"
 # Normalize counts
 combined_objects$K27me3_me <- RunTFIDF(combined_objects$K27me3_me)
 
-# Count ATACsignals ------------------------------------------------------------
-broadPeak_counts_ATAC <- FeatureMatrix(
-  fragments = Fragments(combined_objects$ATAC_aa),
-  features = peaks_gr,
-  cells = colnames(combined_objects$ATAC_aa)
-)
-
-combined_objects$ATAC_aa[["broadPeak_H3K27me3"]] <- CreateChromatinAssay(
-  counts = broadPeak_counts_ATAC,
-  fragments = Fragments(combined_objects$ATAC_aa),
-  annotation = annotation
-)
-DefaultAssay(combined_objects$ATAC_aa) <- "broadPeak_H3K27me3"
-
-# Normalize counts
-combined_objects$ATAC_aa <- RunTFIDF(combined_objects$ATAC_aa)
-
-
 # Export seurat object
 saveRDS(combined_objects, paste0(RESULT_DIR_FINAL, "/", REGION, "_combined_SO_with_broadPeak_me3_Counts.rds"))
 
 # Perform ChromTRAP ------------------------------------------------------------
-# improt ChromVAR score from H3K27ac modality
-# make sure the order of cells are the same between me3 and ac modalities!
-combined_objects$K27me3_me@meta.data$ChromVARScore_H3K27ac <- combined_objects$K27ac_ac@assays$chromvar@data["MA1141.2",]
-
 df_chromVAR_score <- combined_objects$K27me3_me@meta.data[,c("nCount_broadPeak_H3K27me3", "ChromVARScore_H3K27ac", "sample")]
 df_chromVAR_score$sample <- sub("1|2", "", df_chromVAR_score$sample)
 df_chromVAR_score$CellType <- combined_objects$K27me3_me@meta.data$Annotation
 df_chromVAR_score$CellID <- rownames(combined_objects$K27me3_me@meta.data)
 
-df_chromvar_count_High <- df_chromVAR_score %>% 
+df_chromvar_count_High_nanoCT <- df_chromVAR_score %>% 
   group_by(., CellType, sample) %>% 
   mutate(q80 = quantile(ChromVARScore_H3K27ac, 0.8, na.rm = TRUE)) %>%
   dplyr::filter(ChromVARScore_H3K27ac >= q80)
 
-df_chromvar_count_High$Condition <- "High"
-
-
-df_chromvar_count_Low <- df_chromVAR_score %>% 
+df_chromvar_count_Low_nanoCT <- df_chromVAR_score %>% 
   group_by(., CellType, sample) %>% 
   mutate(q20 = quantile(ChromVARScore_H3K27ac, 0.2, na.rm = TRUE)) %>%
   dplyr::filter(ChromVARScore_H3K27ac <= q20)
 
-df_chromvar_count_Low$Condition <- "Low"
+
+# import Seurat object of scMultiome -------------------------------------------
+SO_MO <- paste0(RESULT_DIR_SO_MO, "/", REGION, "_SO_list_Annotated.rds")[[1]] # use Exc neuron
+
+# Count ATAC signal within Epic2-called broadPeaks
+SO_MO[["broadPeak_H3K27me3"]] <- CreateChromatinAssay(
+  counts = broadPeak_counts_me3,
+  fragments = Fragments(SO_MO),
+  annotation = annotation
+)
+DefaultAssay(SO_MO) <- "broadPeak_H3K27me3"
+SO_MO <- RunTFIDF(SO_MO)
+
+# ChromTRAP 
+df_chromVAR_score <- SO_MO@meta.data[,c("Annotation_simple", "Condition")]
+df_chromVAR_score$sample <- sub("-1|-2", "", df_chromVAR_score$Condition)
+df_chromVAR_score$ChromVARScore <- SO_MO@assays$chromvar@data["MA1141.2",]
+df_chromVAR_score$CellID <- rownames(SO_MO@meta.data)
+
+df_chromvar_count_High_MO <- df_chromVAR_score %>% 
+  group_by(., Annotation, sample) %>% 
+  mutate(q80 = quantile(ChromVARScore, 0.8, na.rm = TRUE)) %>%
+  dplyr::filter(ChromVARScore >= q80)
+
+df_chromvar_count_Low_MO <- df_chromVAR_score %>% 
+  group_by(., Annotation, sample) %>% 
+  mutate(q20 = quantile(ChromVARScore, 0.2, na.rm = TRUE)) %>%
+  dplyr::filter(ChromVARScore <= q20)
 
 
 # Get raw count of ATAC and me3 signal in TRAPed exc and inh neurons -----------
-Count_ATAC <- GetAssayData(combined_objects$ATAC_aa, assay = "broadPeak_H3K27me3", slot = "counts")
+Count_ATAC <- GetAssayData(SO_MO, assay = "broadPeak_H3K27me3", slot = "counts")
 Count_Me3 <- GetAssayData(combined_objects$K27me3_me, assay = "broadPeak_H3K27me3", slot = "counts")
 
 # Calculate mean ATAC and me signal in exc and inh neurons,
 # Select peaks associated with DEGs or non-DEGs in exc and inh neurons,
 # Take CPM normalized value,
 # Calculate log2FC, bind exc and inh neurons data. -----------------------------
-calc_log2FC(Count_ATAC, T) %>% head()
-calc_log2FC(Count_Me3, T) %>% head()
-
-DEG_log2FC_ATAC_Me3 <- cbind(calc_log2FC(Count_ATAC, T), calc_log2FC(Count_Me3, T))
+DEG_log2FC_ATAC_Me3 <- cbind(calc_log2FC(Count_ATAC, T, df_chromvar_count_High_MO, df_chromvar_count_Low_MO), 
+                             calc_log2FC(Count_Me3, T, df_chromvar_count_High_nanoCT, df_chromvar_count_Low_nanoCT))
 colnames(DEG_log2FC_ATAC_Me3) <- paste0(c(rep("ATAC_", 3), rep("Me3_", 3)), colnames(DEG_log2FC_ATAC_Me3))
 
 DEG_Classed <- case_when(DEG_log2FC_ATAC_Me3$ATAC_log2FC > 0 & DEG_log2FC_ATAC_Me3$Me3_log2FC > 0~"Both_Up",
@@ -309,7 +364,7 @@ Cat_df <- rbind(DEG_Classed, nonDEG_Classed)
 colnames(Cat_df)[1] <- "Class"
 Cat_df$DEG_nonDEG <- factor(Cat_df$DEG_nonDEG, levels = c("nonDEG", "DEG"))
 
-# Perform χ² test
+# Perform Fisher's exact test
 mat <- matrix(c(
   DEG_Classed$Freq[which(DEG_Classed[,1] == "Me_Up_Ac_Down")],
   sum(DEG_Classed$Freq) - DEG_Classed$Freq[which(DEG_Classed[,1] == "Me_Up_Ac_Down")],
@@ -334,11 +389,11 @@ g <- ggplot(Cat_df, aes(x = DEG_nonDEG, y = Ratio, fill = Class)) +
   ylab("Percentage") +
   xlab("") +
   labs(fill = "Class") +
-  labs(subtitle = paste("chisq.test for Me_down_Ac_Up:", res$p.value))
+  labs(subtitle = paste("Fisher's.test for Me_down_Ac_Up:", res$p.value))
 
 
 ggsave(paste0(RESULT_DIR_FIG, "/", REGION, "Barplt_Ratio_of_ClassedDEGs_me3_ATAC_FC.png"),
        g, width = 5, height = 4)
-ggsave(paste0(RESULT_DIR_FIG, "/", REGION, "Barplt_Ratio_of_ClassedDEGs_me3_ATAC_FC.png"),
+ggsave(paste0(RESULT_DIR_FIG, "/", REGION, "Barplt_Ratio_of_ClassedDEGs_me3_ATAC_FC.pdf"),
        g, width = 5, height = 4)
 

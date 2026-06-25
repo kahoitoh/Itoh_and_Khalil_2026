@@ -16,12 +16,12 @@
 # ===============================================================================
 
 # ---- 0. CONFIG ----------------------------------------------------------------
+BASE_DIR <- "path/to/nanoscope/output" 
+SCRIPT_DIR <- "path/to/your/nanoscope/script"
 
-BASE_DIR <- "D:/in_vivo_nanoCT_2502/nCT_Hippo_basedata_rm_HC1_ATAC"
-SCRIPT_DIR <- "D:/in_vivo_nanoCT_2502/script"
+REGION <- c("BLA", "Hippo", "mPFC")
 
-RESULT_DIR_BROAD <- file.path("..", "nCT_Hippo_baseres_ATACbroadPeaks")
-RESULT_DIR_FINAL <- file.path("..", "nCT_Hippo_baseres_rm_HC1_ATAC_Cells_Having_All_modalities")
+RESULT_DIR_FINAL <- file.path("..", "nCT_", REGION, "_baseres_Cells_Having_All_modalities")
 
 GENOME <- "mm10"
 ASSAY_NAME <- "peaks"
@@ -36,20 +36,20 @@ QC_QUANTILE_HIGH <- 0.99
 QC_QUANTILE_LOW <- 0.01
 FEATURE_MATRIX_PROCESS_N <- 20000
 
-MULTIOME_DIFFPEAK_DIR <- "D:/in_vivo_Multiome_EngramProject/BaseAnalysis_Hippo/5_ATAC_comparison"
+MULTIOME_DIFFPEAK_DIR <- "path/to/MO/DIFFPEAK" # from 1_scMultiome/2_CellTypeMarkerPeaks/1_CellTypeMarkerPeaks_for_nanoCT_Annotation.R
 DIFFPEAK_FILES <- list(
-  GABA  = file.path(MULTIOME_DIFFPEAK_DIR, "GABA_da_peaks_celltype_new_260420.rds"),
-  VGlut = file.path(MULTIOME_DIFFPEAK_DIR, "VGlut_da_peaks_celltype_new_260420.rds"),
-  Glia  = file.path(MULTIOME_DIFFPEAK_DIR, "non_Neuro_da_peaks_celltype.rds")
+  VGlut  = paste0(MULTIOME_DIFFPEAK_DIR, "/", REGION, "_CellType_MarkerPeaks_Exc_Neu.rds"),
+  GABA = paste0(MULTIOME_DIFFPEAK_DIR, "/", REGION, "_CellType_MarkerPeaks_Inh_Neu.rds"),
+  Glia  = paste0(MULTIOME_DIFFPEAK_DIR, "/", REGION, "_CellType_MarkerPeaks_Glia.rds")
 )
 
 setwd(BASE_DIR)
 dir.create(RESULT_DIR_BROAD, recursive = TRUE, showWarnings = FALSE)
 dir.create(RESULT_DIR_FINAL, recursive = TRUE, showWarnings = FALSE)
 
-PARAMETER_FILE <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/config/Parameters_for_clustering_histone.txt"
-MARKERPEAKS_THRESHOLD_FILE <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/config/celltype_marker_peak_thresholds.txt"
-CELLTYPEANNOTATION_FILE <- "D:/in_vivo_Multiome_EngramProject/Github/2_multi-nanoCT/1_Preprocess/config/CelltypeAnnotation.txt"
+PARAMETER_FILE <- "path/to/Github/2_multi-nanoCT/1_Preprocess/metadata/Parameters_for_clustering_histone.txt"
+MARKERPEAKS_THRESHOLD_FILE <- "path/to/Github/2_multi-nanoCT/1_Preprocess/metadata/celltype_marker_peak_thresholds.txt"
+CELLTYPEANNOTATION_FILE <- "path/to/Github/2_multi-nanoCT/1_Preprocess/metadata/CelltypeAnnotation_histone.txt"
 REGION <- "Hippo"
 # ---- 1. PACKAGES AND CUSTOM FUNCTIONS ----------------------------------------
 
@@ -70,6 +70,7 @@ suppressPackageStartupMessages({
   library(ggVennDiagram)
   library(dplyr)
   library(Matrix)
+  library(TFBSTools)
 })
 
 source(file.path(SCRIPT_DIR, "functions_scCT.R"))
@@ -566,6 +567,21 @@ combined_objects$K27ac_ac <- AddMotifs(
 
 combined_objects$K27ac_ac <- RunChromVAR(
   object = combined_objects$K27ac_ac,
+  genome = BSgenome.Mmusculus.UCSC.mm10,
+  new.assay.name = "chromvar"
+)
+
+# Add motifs
+DefaultAssay(combined_objects$ATAC_aa) <- "peaks"
+
+combined_objects$ATAC_aa <- AddMotifs(
+  object = combined_objects$ATAC_aa,
+  genome = BSgenome.Mmusculus.UCSC.mm10,
+  pfm = pfm
+)
+
+combined_objects$ATAC_aa <- RunChromVAR(
+  object = combined_objects$ATAC_aa,
   genome = BSgenome.Mmusculus.UCSC.mm10,
   new.assay.name = "chromvar"
 )

@@ -1,0 +1,4 @@
+region	nCount_ATAC_min	nCount_ATAC_max	TSS.enrichment	nucleosome_signal
+BLA	500	13000	1	0.3
+Hippo	500	10000	1	0.2
+Cortex	500	17000	1	0.1

@@ -1,0 +1,3 @@
+library_id,fragments,cells
+ATAC_BLA_1,/path/to/ATAC_BLA_1/outs/fragments.tsv.gz,/path/to/ATAC_BLA_1/outs/singlecell.csv
+ATAC_BLA_2,/path/to/ATAC_BLA_2/outs/fragments.tsv.gz,/path/to/ATAC_BLA_2/outs/singlecell.csv

@@ -25,9 +25,9 @@ library(cowplot)
 library(eulerr)
 
 # Config------------------------------------------------------------------------
-region <- "Hippo" # or "BLA"
+region <- "BLA" # or "Hippo"
 
-SO <- readRDS("D:/in_vivo_Multiome_EngramProject/FOS-FACS-Sort_MO/Hippo_SO_chromVAR.rds") # seurat object containing FOS-FACS-sorted Cond 4h and whole nuclei HC
+SO <- readRDS("D:/in_vivo_Multiome_EngramProject/FOS-FACS-Sort_MO/BLA_SO_chromVAR.rds") # seurat object containing FOS-FACS-sorted Cond 4h and whole nuclei HC
 
 CellTypes_selected <- if(region == "Hippo"){
   c("DG_1", "DG_2", "CA1", "CA3_Col6a1", "CA3_Kcnq5")

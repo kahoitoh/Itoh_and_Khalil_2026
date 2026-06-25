@@ -1,3 +1,30 @@
+#!/usr/bin/env Rscript
+
+# ==============================================================================
+# Bulk RNA-seq DEG analysis and clustering
+# ------------------------------------------------------------------------------
+# This script processes BLA bulk RNA-seq count data, calculates TPM values,
+# performs DESeq2 differential expression analysis for Conditioning samples
+# against HC, and clusters conditioning-induced upregulated DEGs by their
+# expression patterns across HC, Conditioning, Tone, and Shock groups.
+#
+# Main steps:
+#   1. Filter low-count genes and calculate TPM.
+#   2. Retain protein-coding genes using GTF annotation.
+#   3. Run DESeq2 for Cond_1h, Cond_2h, and Cond_4h versus HC.
+#   4. Summarize upregulated DEGs.
+#   5. Cluster DEG mean-TPM profiles and draw a heatmap.
+#
+# Outputs:
+#   filteredTPM.txt
+#   UpDEG_summary_df.txt
+#   DEseq2_Cond1h_vs_HC.txt
+#   DEseq2_Cond2h_vs_HC.txt
+#   DEseq2_Cond4h_vs_HC.txt
+#   bulk_CondDEG_Clustering.txt
+#   bulk_CondDEG_Clustering_heatmap.pdf
+# ==============================================================================
+
 library(dplyr)
 library(rtracklayer)
 library(DESeq2)

@@ -48,7 +48,7 @@ GO_func <- function(genename){
 
 GO_plt_func <- function(df){
   
-  df <- df[order(df$pvalue, decreasing = F),][1:11,]
+  df <- df[order(df$pvalue, decreasing = F),][1:13,]
   df$Description <- factor(df$Description, levels = df$Description %>% rev())
   df$x <- "x"
   
@@ -66,19 +66,37 @@ GO_plt_func <- function(df){
 
 # load data --------------------------------------------------------------------
 DEG_summary <- read.table(paste0(RESULT_DIR_FINAL, "/DEGs_all_region_list_summary.txt"))
-DEG_Exc <- DEG_summary$Gene_name[grepl("Exc|DG|CA1|CA3", DEG_summary$celltype)]
-DEG_Inh <- DEG_summary$Gene_name[grepl("Inh", DEG_summary$celltype)]
+
+DEG_summary_up <- DEG_summary[which(DEG_summary$Class_use == "Upregulated"),]
+DEG_summary_down <- DEG_summary[which(DEG_summary$Class_use == "Downregulated"),]
+
+DEG_Exc_up <- DEG_summary_up$Gene_name[grepl("Exc|DG|CA1|CA3", DEG_summary_up$celltype)]
+DEG_Inh_up <- DEG_summary_up$Gene_name[grepl("Inh", DEG_summary_up$celltype)]
+DEG_Exc_down <- DEG_summary_down$Gene_name[grepl("Exc|DG|CA1|CA3", DEG_summary_down$celltype)]
+DEG_Inh_down <- DEG_summary_down$Gene_name[grepl("Inh", DEG_summary_down$celltype)]
 
 # perform GO analysis ----------------------------------------------------------
-GO_Exc <- DEG_Exc %>% GO_func()
-GO_Exc_plt <- GO_Exc %>% GO_plt_func()
+GO_Exc_up <- DEG_Exc_up %>% GO_func()
+GO_Exc_plt_up <- GO_Exc_up %>% GO_plt_func()
 
-GO_Inh <- DEG_Inh %>% GO_func()
-GO_Inh_plt <- GO_Inh %>% GO_plt_func()
+GO_Inh_up <- DEG_Inh_up %>% GO_func()
+GO_Inh_plt_up <- GO_Inh_up %>% GO_plt_func()
+
+GO_Exc_down <- DEG_Exc_down %>% GO_func()
+GO_Exc_plt_down <- GO_Exc_down %>% GO_plt_func()
+
+GO_Inh_down <- DEG_Inh_down %>% GO_func()
+GO_Inh_plt_down <- GO_Inh_down %>% GO_plt_func()
 
 # Export -----------------------------------------------------------------------
-ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs.png"), GO_Exc_plt, width = 6, height = 3.5)
-ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs.png"), GO_Inh_plt, width = 6, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs_up.png"), GO_Exc_plt_up, width = 6, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs_up.png"), GO_Inh_plt_up, width = 6, height = 3.5)
 
-ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs.pdf"), GO_Exc_plt, width = 6, height = 3.5)
-ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs.pdf"), GO_Inh_plt, width = 6, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs_up.pdf"), GO_Exc_plt_up, width = 6, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs_up.pdf"), GO_Inh_plt_up, width = 6, height = 3.5)
+
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs_down.png"), GO_Exc_plt_down, width = 8, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs_down.png"), GO_Inh_plt_down, width = 8, height = 3.5)
+
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_ExcDEGs_down.pdf"), GO_Exc_plt_down, width = 8, height = 3.5)
+ggsave(paste0(RESULT_DIR_FINAL, "/GO_bubble_InhDEGs_down.pdf"), GO_Inh_plt_down, width = 8, height = 3.5)

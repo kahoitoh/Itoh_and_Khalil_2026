@@ -1,12 +1,49 @@
+#!/usr/bin/env Rscript
+
+# ==============================================================================
+# Bulk RNA-seq gene set testing using scMultiome-derived CAG/GRN signatures
+# ------------------------------------------------------------------------------
+# This script tests whether gene sets identified from scMultiome GRN/CAG analysis
+# show coordinated expression changes in bulk BLA RNA-seq data.
+#
+# It loads a bulk RNA-seq raw count table and scMultiome-derived GRN/CAG-overlap
+# gene clusters, extracts BLA samples, constructs sample metadata from column names,
+# removes duplicated gene symbols, filters lowly expressed genes, performs TMM
+# normalization and limma-voom transformation, and runs limma::fry gene set tests.
+#
+# The main contrast tests Conditioning 2 h against the average of Tone 2 h and
+# Shock 2 h:
+#
+#   Cond_2h - (Tone_2h + Shock_2h) / 2
+#
+# Gene sets tested:
+#   Cluster1: scMultiome-derived CAG genes
+#   Cluster3: scMultiome-derived non-CAG genes
+#
+# Edit the CONFIG section before running. The script assumes BLA sample columns
+# are named with the "BLA_" prefix and condition/replicate labels such as
+# "Cond_2h_1", "Tone_2h_2", etc.
+#
+# Output:
+#   Fig6j_fry_gene_set_test_results.txt
+#     limma::fry results for Cluster1 and Cluster3 under the Cond2h_vs_other2h
+#     contrast.
+# ==============================================================================
+
+
 library(edgeR)
 library(limma)
 library(dplyr)
 
-# Load bulk RNA-seq count table and scMultiome-derived gene sets
-RawCount <- read.table("RawCountTableContainingAllSamples.txt",
+# config -----------------------------------------------------------------------
+PATH_TO_MO_GRN_LAG <- "D:/in_vivo_Multiome_EngramProject/BaseAnalysis_BLA/13_Scenicplus_optimized/subRegion/Conditioning_Associated_Genes_intersect_before_enh_filtering_with_DEG"
+PATH_TO_RAWCOUNT <- "D:/in_vivo_Multiome_EngramProject/Github/3_Smart-seq2/data"
+
+# Load bulk RNA-seq count table and scMultiome-derived gene sets ---------------
+RawCount <- read.table(paste0(PATH_TO_RAWCOUNT, "/RawCountTableContainingAllSamples.txt"),
                        sep = "\t", header = TRUE, check.names = FALSE)
 
-MO_DEG_GRN_overlap_Genes <- read.table("Clustered_GRN_CAG_intersection.txt",
+MO_DEG_GRN_overlap_Genes <- read.table(paste0(PATH_TO_MO_GRN_LAG, "/Clustered_GRN_CAG_intersection.txt"),
                                        header = TRUE, sep = "\t")
 
 MO_CAG <- MO_DEG_GRN_overlap_Genes$GeneName[

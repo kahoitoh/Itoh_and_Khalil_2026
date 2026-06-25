@@ -30,7 +30,7 @@ library(dplyr)
 library(purrr)
 
 # config -----------------------------------------------------------------------
-REGION <- c("BLA", "Hippo")[1]
+REGION <- c("BLA", "Hippo")[2]
 RESULT_DIR_FINAL <- "path/to/final/res"
 PATH_to_SO <- "path/to/SO_list.rds"
 
@@ -175,18 +175,6 @@ if(REGION == "BLA"){
     pval_thresh = 0.01,
     output_dir = RESULT_DIR_FINAL,
     output_prefix = "Hippo_Inh"
-  )
-  
-  FM_Exc <- run_FindMarkers_by_AP1_score(
-    seurat_obj = SO_Exc,
-    motif_id = "MA1141.2",
-    celltype_column = "Annotation",
-    celltypes_to_keep = SO_Exc@meta.data$Annotation %>% unique(), 
-    percentile_high = 0.9,
-    percentile_low = 0.1,
-    pval_thresh = 0.001,
-    output_dir = RESULT_DIR_FINAL,
-    output_prefix = "Hippo_Exc"
   )
   
   FM_DG <- run_FindMarkers_by_AP1_score(

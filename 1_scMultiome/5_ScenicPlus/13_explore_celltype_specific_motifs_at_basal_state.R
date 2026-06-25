@@ -1,5 +1,41 @@
 #!/usr/bin/env Rscript
 
+# ==============================================================================
+# Identify cell-type-enriched ChromVAR motifs in HC nanoCT Seurat objects
+# ------------------------------------------------------------------------------
+# Purpose:
+#   This script identifies ChromVAR motifs enriched in specific neuronal cell
+#   types from HC samples and visualizes the top enriched motifs using violin
+#   plots across annotated cell types.
+#
+# Inputs:
+#   - Region-specific Seurat object containing all cells:
+#       SO_allCells_<REGION>.rds
+#   - Cell-type annotations stored in the Seurat object metadata column:
+#       Annotation
+#   - Simplified cell-type annotations used for differential testing:
+#       Annotation_simple
+#   - Cell IDs stored in the Seurat object metadata column:
+#       CellID
+#   - Sample labels stored in the Seurat object metadata column:
+#       Sample
+#   - ChromVAR scores stored in the Seurat assay:
+#       chromvar
+#
+# Notes:
+#   - Edit the CONFIG section before running.
+#   - Region-specific neuronal cell types are defined in CellTypes.
+#   - The Seurat object is first filtered to HC cells and then to the selected
+#     region-specific cell types.
+#   - Differential ChromVAR motif enrichment is calculated for each cell type
+#     using FindMarkers.
+#   - Violin plots are generated for the top enriched motifs in each cell type.
+#
+# Outputs:
+#   - Violin plots of cell-type-enriched ChromVAR scores:
+#       ViolinPlt_ChromVARScore_Enriched_in_<CELLTYPE>.png
+# ==============================================================================
+
 library(dplyr)
 library(purrr)
 library(ggplot2)
@@ -41,7 +77,7 @@ ViolinPlt_list <- lapply(Diff_list,
                          function(diff_res){
                            
                            VlnPlot(SO_selected, 
-                                   features = rownames(Diff_ChromVAR_BA_over_LAandSst)[1:50], 
+                                   features = rownames(diff_res)[1:50], 
                                    group.by = "Annotation")
                            
                          })

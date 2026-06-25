@@ -45,8 +45,9 @@ COMPARISONS <- c(
 
 CELLTYPES_TO_KEEP <- c(
   "BLA_Exc", "BLA_Inh",
-  "mPFC_Exc", "mPFC_Inh",
-  "Hippo_DG", "Hippo_CA1", "Hippo_CA3", "Hippo_Inh"
+  "Hippo_DG", "Hippo_CA1", "Hippo_CA3", "Hippo_Inh",
+  "mPFC_Exc", "mPFC_Inh"
+  
 )
 
 # output dir -------------------------------------------------------------------
@@ -174,13 +175,13 @@ p <- ggplot(deg_count_df, aes(x = celltype, y = n_genes_signed, fill = Exc_or_In
 ggsave(
   filename = file.path(PLOT_DIR, "DEG_count_barplot.pdf"),
   plot = p,
-  width = 5,
+  width = 6,
   height = 3
 )
 
 ggsave(
   filename = file.path(PLOT_DIR, "DEG_count_barplot.png"),
   plot = p,
-  width = 5,
+  width = 6,
   height = 3
 )
