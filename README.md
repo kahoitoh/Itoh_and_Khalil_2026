@@ -9,7 +9,7 @@ Preprint: bioRxiv
 </p>
 
 ## Contents  
-- `1_scMultiome`, `2_multi-nanoCT`, `3_Smart-seq2`: Preprocessing and downstream analysis for each dataset.
+- `1_scMultiome`, `2_multi-nanoCT`, and `3_Smart-seq2`: Preprocessing and downstream analysis for each dataset.
 - demo_ChromTRAP: a minimal demo for the ChromTRAP analysis.
 
 ## Notes
